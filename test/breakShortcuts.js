@@ -77,6 +77,7 @@ describe('pauseBreaksShortcut', () => {
         const log = { info: vi.fn() }
         const skipToBreak = vi.fn()
         const skipToMicrobreak = vi.fn()
+        const skipToExtendedBreak = vi.fn()
         const pauseBreaks = vi.fn()
         const breakPlanner = { _scheduledBreakType: 'break' }
 
@@ -84,13 +85,14 @@ describe('pauseBreaksShortcut', () => {
           name: 'skipToNextScheduledBreakShortcut',
           settings: null,
           breakPlanner,
-          functions: { skipToBreak, skipToMicrobreak, pauseBreaks },
+          functions: { skipToBreak, skipToMicrobreak, skipToExtendedBreak, pauseBreaks },
           log
         })
 
         expect(log.info).toHaveBeenCalledWith('Stretchly: skipping to next scheduled break by shortcut')
         expect(skipToBreak).toHaveBeenCalled()
         expect(skipToMicrobreak).not.toHaveBeenCalled()
+        expect(skipToExtendedBreak).not.toHaveBeenCalled()
         expect(pauseBreaks).not.toHaveBeenCalled()
       })
 
@@ -98,6 +100,7 @@ describe('pauseBreaksShortcut', () => {
         const log = { info: vi.fn() }
         const skipToBreak = vi.fn()
         const skipToMicrobreak = vi.fn()
+        const skipToExtendedBreak = vi.fn()
         const pauseBreaks = vi.fn()
         const breakPlanner = { _scheduledBreakType: 'microbreak' }
 
@@ -105,13 +108,37 @@ describe('pauseBreaksShortcut', () => {
           name: 'skipToNextScheduledBreakShortcut',
           settings: null,
           breakPlanner,
-          functions: { skipToBreak, skipToMicrobreak, pauseBreaks },
+          functions: { skipToBreak, skipToMicrobreak, skipToExtendedBreak, pauseBreaks },
           log
         })
 
         expect(log.info).toHaveBeenCalledWith('Stretchly: skipping to next scheduled break by shortcut')
         expect(skipToBreak).not.toHaveBeenCalled()
         expect(skipToMicrobreak).toHaveBeenCalled()
+        expect(skipToExtendedBreak).not.toHaveBeenCalled()
+        expect(pauseBreaks).not.toHaveBeenCalled()
+      })
+
+      it('skips to next scheduled extended break', () => {
+        const log = { info: vi.fn() }
+        const skipToBreak = vi.fn()
+        const skipToMicrobreak = vi.fn()
+        const skipToExtendedBreak = vi.fn()
+        const pauseBreaks = vi.fn()
+        const breakPlanner = { _scheduledBreakType: 'extendedBreak' }
+
+        onShortcut({
+          name: 'skipToNextScheduledBreakShortcut',
+          settings: null,
+          breakPlanner,
+          functions: { skipToBreak, skipToMicrobreak, skipToExtendedBreak, pauseBreaks },
+          log
+        })
+
+        expect(log.info).toHaveBeenCalledWith('Stretchly: skipping to next scheduled break by shortcut')
+        expect(skipToBreak).not.toHaveBeenCalled()
+        expect(skipToMicrobreak).not.toHaveBeenCalled()
+        expect(skipToExtendedBreak).toHaveBeenCalled()
         expect(pauseBreaks).not.toHaveBeenCalled()
       })
     })
@@ -172,6 +199,26 @@ describe('pauseBreaksShortcut', () => {
 
         expect(log.info).toHaveBeenCalledWith('Stretchly: skipping to next Mini break by shortcut')
         expect(skipToMicrobreak).toHaveBeenCalled()
+        expect(pauseBreaks).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('skipToNextExtendedBreakShortcut', () => {
+      it('skips to next scheduled extended break', () => {
+        const log = { info: vi.fn() }
+        const skipToExtendedBreak = vi.fn()
+        const pauseBreaks = vi.fn()
+
+        onShortcut({
+          name: 'skipToNextExtendedBreakShortcut',
+          settings: null,
+          breakPlanner: null,
+          functions: { skipToExtendedBreak, pauseBreaks },
+          log
+        })
+
+        expect(log.info).toHaveBeenCalledWith('Stretchly: skipping to next Extended break by shortcut')
+        expect(skipToExtendedBreak).toHaveBeenCalled()
         expect(pauseBreaks).not.toHaveBeenCalled()
       })
     })
@@ -272,7 +319,8 @@ describe('pauseBreaksShortcut', () => {
         skipToNextScheduledBreakShortcut: 6,
         skipToNextMiniBreakShortcut: 7,
         skipToNextLongBreakShortcut: 8,
-        resetBreaksShortcut: 9
+        skipToNextExtendedBreakShortcut: 9,
+        resetBreaksShortcut: 10
       }
 
       const settings = { get: vi.fn((name) => intervals[name]) }
@@ -288,18 +336,18 @@ describe('pauseBreaksShortcut', () => {
       // Check shortcut registration
       // ------------
 
-      expect(globalShortcut.register).toHaveBeenCalledTimes(10)
+      expect(globalShortcut.register).toHaveBeenCalledTimes(11)
 
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 11; i++) {
         expect(globalShortcut.register.mock.calls[i][0]).toBe(i)
       }
 
       // Check log
       // ------------
 
-      expect(log.info).toHaveBeenCalledTimes(10)
+      expect(log.info).toHaveBeenCalledTimes(11)
 
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 11; i++) {
         expect(log.info.mock.calls[i][0]).toMatch(`registration successful (${i})`)
       }
     })

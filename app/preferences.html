@@ -257,6 +257,60 @@
       <input type="checkbox" value="breakPostpone" id="enablePostponeLong">
       <label data-i18next="preferences.schedule.enablePostponeLong" for="enablePostponeLong"></label>
     </div>
+    <div>
+      <hr />
+    </div>
+    <div>
+      <span data-i18next="preferences.schedule.extendedBreaks">
+      </span>
+    </div>
+    <div>
+      <p data-i18next="preferences.schedule.extendedBreaksInfo">
+      </p>
+    </div>
+    <div>
+      <input type="checkbox" value="extendedBreak" id="enableExtendedBreaks">
+      <label data-i18next="preferences.schedule.enableExtendedBreaks" for="enableExtendedBreaks"></label>
+    </div>
+    <div>
+      <label data-i18next="preferences.schedule.breakFor" data-same-width-label for="extendedBreakFor"></label>
+      <input type="range" min="1" max="60" step="1" list="tickmarksExtendedBreakFor" name="extendedBreakDuration"
+        data-divisor="60000" id="extendedBreakFor">
+      <datalist id="tickmarksExtendedBreakFor">
+        <option value="5"></option>
+        <option value="10"></option>
+        <option value="15"></option>
+        <option value="20"></option>
+        <option value="30"></option>
+        <option value="45"></option>
+        <option value="60"></option>
+      </datalist>
+      <output data-unit="minutes"></output>
+    </div>
+    <div>
+      <label data-i18next="preferences.schedule.every" data-same-width-label for="extendedBreakEvery"></label>
+      <input type="range" min="2" max="12" step="1" list="tickmarksExtendedBreakEvery" name="extendedBreakInterval"
+        data-divisor="1" id="extendedBreakEvery">
+      <datalist id="tickmarksExtendedBreakEvery">
+        <option value="2"></option>
+        <option value="3"></option>
+        <option value="4"></option>
+        <option value="6"></option>
+        <option value="8"></option>
+        <option value="10"></option>
+        <option value="12"></option>
+      </datalist>
+      <output data-unit="longBreaks"></output>
+    </div>
+    <div>
+      <input type="checkbox" value="extendedBreakNotification" id="showNotificationBeforeExtendedBreak">
+      <label data-i18next="preferences.schedule.showNotificationBeforeExtendedBreak"
+        for="showNotificationBeforeExtendedBreak"></label>
+    </div>
+    <div>
+      <input type="checkbox" value="extendedBreakPostpone" id="enablePostponeExtended">
+      <label data-i18next="preferences.schedule.enablePostponeExtended" for="enablePostponeExtended"></label>
+    </div>
     <div data-strict-mode>
       <hr />
     </div>
@@ -275,6 +329,10 @@
     <div data-strict-mode>
       <input type="checkbox" value="breakStrictMode" id="enableStrictLong">
       <label data-i18next="preferences.schedule.enableStrictLong" for="enableStrictLong"></label>
+    </div>
+    <div data-strict-mode>
+      <input type="checkbox" value="extendedBreakStrictMode" id="enableStrictExtended">
+      <label data-i18next="preferences.schedule.enableStrictExtended" for="enableStrictExtended"></label>
     </div>
   </div>
   <div class="theme hidden">

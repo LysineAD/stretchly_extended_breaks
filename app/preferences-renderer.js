@@ -106,7 +106,7 @@ window.onload = async (e) => {
       const output = range.closest('div').querySelector('output')
       range.value = settings[range.name] / divisor
       const unit = output.dataset.unit
-      output.innerHTML = await window.utils.formatUnitAndValue(unit, range.value)
+      output.innerHTML = await formatRangeOutput(unit, range.value)
       document.querySelector('#longBreakEvery').closest('div').querySelector('output')
         .innerHTML = await window.i18next.t('utils.minutes', { count: parseInt(realBreakInterval()) })
     })
@@ -227,18 +227,18 @@ window.onload = async (e) => {
     const output = range.closest('div').querySelector('output')
     range.value = settings[range.name] / divisor
     const unit = output.dataset.unit
-    output.innerHTML = await window.utils.formatUnitAndValue(unit, range.value)
+    output.innerHTML = await formatRangeOutput(unit, range.value)
     document.querySelector('#longBreakEvery').closest('div').querySelector('output')
       .innerHTML = await window.i18next.t('utils.minutes', { count: parseInt(realBreakInterval()) })
     if (!eventsAttached) {
       range.onchange = async event => {
-        output.innerHTML = await window.utils.formatUnitAndValue(unit, range.value)
+        output.innerHTML = await formatRangeOutput(unit, range.value)
         document.querySelector('#longBreakEvery').closest('div').querySelector('output')
           .innerHTML = await window.i18next.t('utils.minutes', { count: parseInt(realBreakInterval()) })
         window.settings.saveSettings(range.name, range.value * divisor)
       }
       range.oninput = async event => {
-        output.innerHTML = await window.utils.formatUnitAndValue(unit, range.value)
+        output.innerHTML = await formatRangeOutput(unit, range.value)
         document.querySelector('#longBreakEvery').closest('div').querySelector('output')
           .innerHTML = await window.i18next.t('utils.minutes', { count: parseInt(realBreakInterval()) })
       }
@@ -340,5 +340,12 @@ window.onload = async (e) => {
     const microbreakInterval = document.querySelector('#miniBreakEvery').value * 1
     const breakInterval = document.querySelector('#longBreakEvery').value * 1
     return microbreakInterval * (breakInterval + 1)
+  }
+
+  async function formatRangeOutput (unit, value) {
+    if (unit === 'longBreaks') {
+      return window.i18next.t('preferences.schedule.longBreakCount', { count: parseInt(value) })
+    }
+    return window.utils.formatUnitAndValue(unit, value)
   }
 }

@@ -12,6 +12,7 @@ const shortcuts = {
   skipToNextScheduledBreakShortcut: null,
   skipToNextMiniBreakShortcut: null,
   skipToNextLongBreakShortcut: null,
+  skipToNextExtendedBreakShortcut: null,
   resetBreaksShortcut: null
 }
 
@@ -36,7 +37,9 @@ function onShortcut ({ name, settings, log, breakPlanner, functions }) {
       break
     case 'skipToNextScheduledBreakShortcut':
       log.info('Stretchly: skipping to next scheduled break by shortcut')
-      if (breakPlanner._scheduledBreakType === 'break') {
+      if (breakPlanner._scheduledBreakType === 'extendedBreak') {
+        functions.skipToExtendedBreak()
+      } else if (breakPlanner._scheduledBreakType === 'break') {
         functions.skipToBreak()
       } else if (breakPlanner._scheduledBreakType === 'microbreak') {
         functions.skipToMicrobreak()
@@ -49,6 +52,10 @@ function onShortcut ({ name, settings, log, breakPlanner, functions }) {
     case 'skipToNextLongBreakShortcut':
       log.info('Stretchly: skipping to next Long break by shortcut')
       functions.skipToBreak()
+      break
+    case 'skipToNextExtendedBreakShortcut':
+      log.info('Stretchly: skipping to next Extended break by shortcut')
+      functions.skipToExtendedBreak()
       break
     case 'resetBreaksShortcut':
       log.info('Stretchly: resetting breaks by shortcut')

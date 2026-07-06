@@ -9,6 +9,7 @@ class StatusMessages {
     this.timeToNextBreak = breakPlanner.timeToNextBreak
     this.isPaused = breakPlanner.isPaused
     this.breakNumber = breakPlanner.breakNumber
+    this.longBreakNumber = breakPlanner.longBreakNumber
     this.settings = settings
     this.i18next = i18next
     this.humanizeDuration = humanizeDuration
@@ -16,7 +17,7 @@ class StatusMessages {
 
   get trayMessage () {
     let message = ''
-    if (this.reference === 'finishMicrobreak' || this.reference === 'finishBreak') {
+    if (this.reference === 'finishMicrobreak' || this.reference === 'finishBreak' || this.reference === 'finishExtendedBreak') {
       return message
     }
 
@@ -45,10 +46,22 @@ class StatusMessages {
 
     const breakInterval = this.settings.get('breakInterval') + 1
     const breakNumber = this.breakNumber % breakInterval
+    const extendedBreakInterval = this.settings.get('extendedBreakInterval')
+    const longBreakNumber = this.longBreakNumber % extendedBreakInterval
+
+    if (this.reference === 'startExtendedBreak' || this.reference === 'startExtendedBreakNotification') {
+      message += this.i18next.t('statusMessages.nextExtendedBreak') + ' ' +
+        formatTimeIn(this.timeToNextBreak, this.settings.get('language'), this.i18next, this.humanizeDuration)
+      return message
+    }
 
     if (this.reference === 'startBreak' || this.reference === 'startBreakNotification') {
       message += this.i18next.t('statusMessages.nextLongBreak') + ' ' +
         formatTimeIn(this.timeToNextBreak, this.settings.get('language'), this.i18next, this.humanizeDuration)
+      if (this.settings.get('extendedBreak')) {
+        message += '\n' + this.i18next.t('statusMessages.nextExtendedBreak') + ' ' +
+          this.i18next.t('statusMessages.afterLongBreak', { count: extendedBreakInterval - longBreakNumber })
+      }
       return message
     }
 
